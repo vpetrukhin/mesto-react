@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import api from '../utils/Api';
+import Card from './Card';
 
 
 function Main({
@@ -6,21 +8,53 @@ function Main({
   onAddPlace,
   onEditAvatar
 }) {
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [cards, setCards] = useState([]);
+
+
+  useEffect(() => {
+    api.getInfoUser()
+      .then(data => {
+        setUserName(data.name);
+        setUserDescription(data.about);
+        setUserAvatar(data.avatar);
+      })
+  })
+
+
+  useEffect(() => {
+    api.getCardInfo()
+      .then(res => {
+        setCards(res.map(item => ({
+          title: item.name,
+          url: item.link,
+          likesCount: item.likes.length,
+          cardId: item._id,
+        })));
+      })
+  }, [])
+
   return (
     <main className="main">
       <section className="profile">
-        <div className = "profile__img-wrapper" onClick={onEditAvatar} >
-          <img src="#" alt="Аватар профиля" className="profile__img" />
+        <div className = "profile__img-wrapper" onClick={onEditAvatar}>
+          <img src={`${userAvatar}`} alt="Аватар профиля" className="profile__img" />
         </div> 
         <div className="profile__info">
-          <h1 className="profile__name">Жак-Ив Кусто</h1>
-          <p className="profile__job">Исследователь океана</p>
+          <h1 className="profile__name">{userName}</h1>
+          <p className="profile__job">{userDescription}</p>
           <button className="profile__edit-btn" onClick={onEditProfile} type="button" aria-label="Edit"></button>
         </div>
         <button className="profile__add-btn" onClick={onAddPlace} type="button"></button>
       </section>
 
-      <section className="elements"></section>
+      <section className="elements">
+        {
+          cards.map((item) => <Card key={item.cardId} {...item}/>)
+        }
+      </section>
     </main>
 
   )
