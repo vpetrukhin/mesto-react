@@ -1,12 +1,13 @@
 .page {
   box-sizing: border-box;
   height: 100%;
+  padding: 45px 0 60px;
   font-family: Inter, sans-serif;
   background-color: #000000;
 }
 
-.page__content {
-  font-family: Inter, sans-serif;
-  background-color: #000000;
-  
+@media screen and (max-width:425px) {
+  .page {
+    padding: 28px 36px;
+  }
 }
