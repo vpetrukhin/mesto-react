@@ -6,7 +6,8 @@ import Card from './Card';
 function Main({
   onEditProfile,
   onAddPlace,
-  onEditAvatar
+  onEditAvatar,
+  handleCardClick
 }) {
   const [userName, setUserName] = useState('');
   const [userDescription, setUserDescription] = useState('');
@@ -52,7 +53,7 @@ function Main({
 
       <section className="elements">
         {
-          cards.map((item) => <Card key={item.cardId} {...item}/>)
+          cards.map((item) => <Card key={item.cardId} {...item} onCardClick={handleCardClick} card={item} />)
         }
       </section>
     </main>

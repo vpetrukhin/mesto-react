@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Footer from './Footer';
 import Header from './Header';
+import ImagePopup from './ImagePopup';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 
@@ -10,11 +11,17 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState('');
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setSelectedCard('');
+  }
+
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
   }
 
   return (
@@ -26,7 +33,8 @@ function App() {
         setIsAddPlacePopupOpen(true);
       }} onEditAvatar={() => {
         setIsEditAvatarPopupOpen(true);
-      }} />
+      }} handleCardClick={handleCardClick}
+        />
       <Footer />
 
       <PopupWithForm name='profile' title='Редактировать профиль' isOpen={isEditProfilePopupOpen} onClosePopup={closeAllPopups} >
@@ -55,7 +63,7 @@ function App() {
         <button type="submit" className="popup__btn" disabled={true}>Сохранить</button>
       </PopupWithForm>
 
-      
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </div>
   );
 }
