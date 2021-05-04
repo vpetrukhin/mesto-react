@@ -22,6 +22,7 @@ function Main({
         setUserDescription(data.about);
         setUserAvatar(data.avatar);
       })
+      .catch((err) => console.log(`Ошибка ${err}`))
   })
 
 
@@ -33,8 +34,10 @@ function Main({
           url: item.link,
           likesCount: item.likes.length,
           cardId: item._id,
-        })));
+        })))
+        
       })
+      .catch((err) => console.log(`Ошибка ${err}`))
   }, [])
 
   return (

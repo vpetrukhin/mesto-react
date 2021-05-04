@@ -11,14 +11,20 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState('');
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  let imagePopup='';
+
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
-    setSelectedCard('');
+    setSelectedCard(null);
   }
+
+    selectedCard ? imagePopup=<ImagePopup card={selectedCard} onClose={closeAllPopups}/> : imagePopup='';
+
 
   const handleCardClick = (card) => {
     setSelectedCard(card);
@@ -62,8 +68,8 @@ function App() {
         <span className = "ava-input-error popup__input-error popup__input-error_type_second"></span>
         <button type="submit" className="popup__btn" disabled={true}>Сохранить</button>
       </PopupWithForm>
-
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+  
+      {imagePopup}
     </div>
   );
 }
