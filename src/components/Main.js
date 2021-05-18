@@ -25,6 +25,7 @@ function Main({
           url: item.link,
           likesCount: item.likes.length,
           cardId: item._id,
+          owner: item.owner
         })))
         
       })
