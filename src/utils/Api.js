@@ -88,6 +88,27 @@ class Api {
     .then(res => this._getResponseData(res))
   }
 
+  changeLikeCardStatus(cardId, isLiked) {
+    if (isLiked) {
+      return fetch(`${this._url}${this._group}/cards/likes/${cardId}`, {
+          method: 'DELETE',
+          headers: {
+            authorization: `${this._token}`
+          }
+        })
+        .then(res => this._getResponseData(res))
+    } else {
+      return fetch(`${this._url}${this._group}/cards/likes/${cardId}`, {
+          method: 'PUT',
+          headers: {
+            authorization: `${this._token}`
+          }
+        })
+        .then(res => this._getResponseData(res))
+    }
+
+  }
+
   updateAvatar(link) {
     return fetch(`${this._url}${this._group}/users/me/avatar`, {
       method: 'PATCH',

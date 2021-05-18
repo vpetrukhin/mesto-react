@@ -15,26 +15,31 @@ function Main({
 
   const [cards, setCards] = useState([]);
 
-  let user;
-
   useEffect(() => {
     api.getCardInfo()
       .then(res => {
-        setCards(res.map(item => ({
-          title: item.name,
-          url: item.link,
-          likesCount: item.likes.length,
-          cardId: item._id,
-          owner: item.owner
-        })))
-        
+        setCards(res);
       })
       .catch((err) => console.log(`Ошибка ${err}`))
   }, [])
 
+  let user;
+
   if (currentUser) {
     user = currentUser;
   }
+
+  // Функции
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(i => i._id === user._id);
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    });
+  }
+
+  
 
   return (
     <main className="main">
@@ -52,7 +57,13 @@ function Main({
 
       <section className="elements">
         {
-          cards.map((item) => <Card key={item.cardId} {...item} onCardClick={handleCardClick} card={item} />)
+          cards.map((item) => 
+          <Card 
+            key={item._id}
+            card={item}
+            onCardClick={handleCardClick}
+            onCardLike={() => handleCardLike(item)}
+          />)
         }
       </section>
     </main>
