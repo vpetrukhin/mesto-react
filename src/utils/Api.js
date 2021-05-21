@@ -28,7 +28,7 @@ class Api {
     }).then(res => this._getResponseData(res))
   }
 
-  changeUserInfo(data) {
+  changeUserInfo({ name, about }) {
     return fetch(`${this._url}${this._group}/users/me`, {
       method: 'PATCH',
       headers: {
@@ -36,8 +36,8 @@ class Api {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: data.name,
-        about: data.about,
+        name: name,
+        about: about,
       })
     })
     .then(res => this._getResponseData(res))

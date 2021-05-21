@@ -6,6 +6,7 @@ import ImagePopup from './ImagePopup';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 import UserContext from '../context/CurrentUserContext';
+import EditProfilePopup from './EditProfilePopup';
 
 
 function App() {
@@ -41,12 +42,21 @@ function App() {
     setSelectedCard(card);
   }
 
+  const handleUpdateUser = ({ name, about }) => {
+    api.changeUserInfo({ name, about })
+      .then((userData) => { 
+        setCurrentUser(userData);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(`Ошибка ${err}`))
+  }
+
   selectedCard ? imagePopup=<ImagePopup card={selectedCard} onClose={closeAllPopups}/> : imagePopup='';
   
   return (
     <div className="page">
+      <Header />
       <UserContext.Provider value={currentUser}>
-        <Header />
         <Main onEditProfile={() => {
           setIsEditProfilePopupOpen(true);
         }} onAddPlace={() => {
@@ -57,13 +67,11 @@ function App() {
           />
         <Footer />
   
-        <PopupWithForm name='profile' title='Редактировать профиль' isOpen={isEditProfilePopupOpen} onClosePopup={closeAllPopups} >
-          <input type="text" className="popup__input" id="name-input" name="name" required placeholder="Имя" minLength="2" maxLength="40" />
-          <span className="name-input-error popup__input-error"></span>
-          <input type="text" className="popup__input" id="job-input" name="about" required placeholder="Род деятельности"   minLength="2" maxLength="200" />
-          <span className="job-input-error popup__input-error popup__input-error_type_second"></span>
-          <button type="submit" className="popup__btn" disabled={true}>Сохранить</button>
-        </PopupWithForm>
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
   
         <PopupWithForm name="new-item" title="Новое место" isOpen={isAddPlacePopupOpen} onClosePopup={closeAllPopups} >
           <input type = "text" className="popup__input popup__input_type_new-item" id="newName-input" name="name" placeholder="Название" minLength="2" maxLength="30" required />
