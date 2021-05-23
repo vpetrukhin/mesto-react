@@ -7,6 +7,7 @@ import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 import UserContext from '../context/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 
 
 function App() {
@@ -51,6 +52,15 @@ function App() {
       .catch((err) => console.log(`Ошибка ${err}`))
   }
 
+  const handleUpdateAvatar = ({ avatar }) => {
+    api.updateAvatar(avatar)
+      .then((userData) => {
+        setCurrentUser(userData);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err))
+  }
+
   selectedCard ? imagePopup=<ImagePopup card={selectedCard} onClose={closeAllPopups}/> : imagePopup='';
   
   return (
@@ -85,11 +95,11 @@ function App() {
           <button type="button" className="popup__btn">Да</button>
         </PopupWithForm>
   
-        <PopupWithForm name="change" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClosePopup={closeAllPopups}>
-          <input type="url" className="popup__input popup__input_type_change" id="ava-input" name="link" placeholder="Ссылка на аватар" required />
-          <span className = "ava-input-error popup__input-error popup__input-error_type_second"></span>
-          <button type="submit" className="popup__btn" disabled={true}>Сохранить</button>
-        </PopupWithForm>
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
     
         {imagePopup}
       </UserContext.Provider>

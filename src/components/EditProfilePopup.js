@@ -23,7 +23,6 @@ function EditProfilePopup({
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Передаём значения управляемых компонентов во внешний обработчик
     onUpdateUser(
       {
         name,
@@ -33,7 +32,7 @@ function EditProfilePopup({
   }
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser.about && currentUser.name) {
       setName(currentUser.name);
       setDescription(currentUser.about);
     }
