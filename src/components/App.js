@@ -18,9 +18,16 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
+
 
   // Вспомогательные переменные
   let imagePopup = '';
+  let user;
+
+  if (currentUser) {
+    user = currentUser;
+  }
 
   useEffect(() => {
     api.getInfoUser()
@@ -29,6 +36,15 @@ function App() {
       })
       .catch((err) => console.log(`Ошибка ${err}`))
   }, [])
+
+  useEffect(() => {
+    api.getCardInfo()
+      .then(res => {
+        setCards(res);
+      })
+      .catch((err) => console.log(`Ошибка ${err}`))
+  }, [])
+
 
 
   // Функции
@@ -61,20 +77,34 @@ function App() {
       .catch((err) => console.log(err))
   }
 
+  const handleCardLike = (card) => {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(i => i._id === user._id);
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    });
+  }
+
+  const handleCardDelete = () => {
+
+  }
+
   selectedCard ? imagePopup=<ImagePopup card={selectedCard} onClose={closeAllPopups}/> : imagePopup='';
   
   return (
     <div className="page">
       <Header />
       <UserContext.Provider value={currentUser}>
-        <Main onEditProfile={() => {
-          setIsEditProfilePopupOpen(true);
-        }} onAddPlace={() => {
-          setIsAddPlacePopupOpen(true);
-        }} onEditAvatar={() => {
-          setIsEditAvatarPopupOpen(true);
-        }} handleCardClick={handleCardClick}
-          />
+        <Main 
+          onEditProfile={() => {setIsEditProfilePopupOpen(true);}}
+          onAddPlace={() => {setIsAddPlacePopupOpen(true);}}
+          onEditAvatar={() => {setIsEditAvatarPopupOpen(true);}}
+          handleCardClick={handleCardClick}
+          cards={cards}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+        />
         <Footer />
   
         <EditProfilePopup
