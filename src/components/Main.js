@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from './Card';
-import  UserContext from '../context/CurrentUserContext';
+import  UserContext from '../contexts/CurrentUserContext';
 
 
 function Main({

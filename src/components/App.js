@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import api from '../utils/Api';
+import api from '../utils/api';
 import Footer from './Footer';
 import Header from './Header';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
-import UserContext from '../context/CurrentUserContext';
+import UserContext from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
