@@ -78,6 +78,16 @@ function App() {
       .catch((err) => console.log(err))
   }
 
+  const handleAddPlaceSubmit = ({ name, link }) => {
+    api.loadNewCard({ name, link })
+      .then((newCard) => {
+        setCards([...cards, newCard]);
+        console.log(cards);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err))
+  }
+
   const handleCardLike = (card) => {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(i => i._id === user._id);
@@ -117,6 +127,7 @@ function App() {
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
         />
   
         <PopupWithForm name="delete" title="Вы уверенны?">
