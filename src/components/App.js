@@ -82,7 +82,6 @@ function App() {
     api.loadNewCard({ name, link })
       .then((newCard) => {
         setCards([...cards, newCard]);
-        console.log(cards);
         closeAllPopups();
       })
       .catch((err) => console.log(err))
@@ -97,8 +96,13 @@ function App() {
     });
   }
 
-  const handleCardDelete = () => {
-
+  const handleCardDelete = (item) => {
+    api.deleteCard(item._id)
+      .then((res) => {
+        if (res) {
+          setCards(cards.filter(card => card._id !== item._id));
+        }
+      })
   }
 
   selectedCard ? imagePopup=<ImagePopup card={selectedCard} onClose={closeAllPopups}/> : imagePopup='';
