@@ -15,21 +15,15 @@ function Main({
 
   const currentUser = React.useContext(UserContext);
 
-  let user;
-
-  if (currentUser) {
-    user = currentUser;
-  }
-
   return (
     <main className="main">
       <section className="profile">
         <div className = "profile__img-wrapper" onClick={onEditAvatar}>
-          <img src={`${user.avatar}`} alt="Аватар профиля" className="profile__img" />
+          <img src={`${currentUser.avatar}`} alt="Аватар профиля" className="profile__img" />
         </div> 
         <div className="profile__info">
-          <h1 className="profile__name">{user.name}</h1>
-          <p className="profile__job">{user.about}</p>
+          <h1 className="profile__name">{currentUser.name}</h1>
+          <p className="profile__job">{currentUser.about}</p>
           <button className="profile__edit-btn" onClick={onEditProfile} type="button" aria-label="Edit"></button>
         </div>
         <button className="profile__add-btn" onClick={onAddPlace} type="button"></button>
@@ -42,8 +36,8 @@ function Main({
             key={item._id}
             card={item}
             onCardClick={handleCardClick}
-            onCardLike={() => onCardLike(item)}
-            onCardDelete={() => onCardDelete(item)}
+            onCardLike={onCardLike}
+            onCardDelete={onCardDelete}
           />)
         }
       </section>

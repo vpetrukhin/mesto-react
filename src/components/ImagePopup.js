@@ -4,13 +4,10 @@ function ImagePopup({
   card,
   onClose
 }) {
-
-  let openPopupSelector;
-
-  card ? openPopupSelector='popup_opened' : openPopupSelector='';
+  const popupClassNames = `popup image-popup ${card ? 'popup_opened' : ''}` 
 
   return (
-    <div className={`popup image-popup ${openPopupSelector}`}>
+    <div className={popupClassNames}>
       <div className="image-popup__container">
         <button className="image-popup__close-btn popup__btn-close" onClick={onClose} type="button"></button>
         <img className="image-popup__img" src={card.link} alt={card.name} />

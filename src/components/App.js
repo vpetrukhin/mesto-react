@@ -5,7 +5,7 @@ import Header from './Header';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
-import UserContext from '../contexts/CurrentUserContext';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
@@ -18,36 +18,8 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [currentUser, setCurrentUser] = useState({});
-  
+  const [currentUser, setCurrentUser] = useState('');
   const [cards, setCards] = useState([]);
-
-
-  // Вспомогательные переменные
-  let imagePopup = '';
-  let user;
-
-  if (currentUser) {
-    user = currentUser;
-  }
-
-  useEffect(() => {
-    api.getInfoUser()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => console.log(`Ошибка ${err}`))
-  }, [])
-
-  useEffect(() => {
-    api.getCardInfo()
-      .then(res => {
-        setCards(res);
-      })
-      .catch((err) => console.log(`Ошибка ${err}`))
-  }, [])
-
-
 
   // Функции
   const closeAllPopups = () => {
@@ -60,6 +32,15 @@ function App() {
   const handleCardClick = (card) => {
     setSelectedCard(card);
   }
+
+  useEffect(() => {
+    Promise.all([api.getInfoUser(), api.getCardInfo()])
+      .then(([userData, cardsData]) => {
+        setCurrentUser(userData);
+        setCards(cardsData);
+      })
+      .catch((err) => console.log(err))
+  })
 
   const handleUpdateUser = ({ name, about }) => {
     api.changeUserInfo({ name, about })
@@ -90,11 +71,13 @@ function App() {
 
   const handleCardLike = (card) => {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(i => i._id === user._id);
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
     // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    });
+    api.changeLikeCardStatus(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+      })
+      .catch((err) => console.log(err));
   }
 
   const handleCardDelete = (item) => {
@@ -104,14 +87,13 @@ function App() {
           setCards(cards.filter(card => card._id !== item._id));
         }
       })
+      .catch((err) => console.log(err));
   }
 
-  selectedCard ? imagePopup=<ImagePopup card={selectedCard} onClose={closeAllPopups}/> : imagePopup='';
-  
   return (
     <div className="page">
       <Header />
-      <UserContext.Provider value={currentUser}>
+      <CurrentUserContext.Provider value={currentUser}>
         <Main 
           onEditProfile={() => {setIsEditProfilePopupOpen(true);}}
           onAddPlace={() => {setIsAddPlacePopupOpen(true);}}
@@ -145,8 +127,10 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
         />
     
-        {imagePopup}
-      </UserContext.Provider>
+        {selectedCard && 
+          <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+        }
+      </CurrentUserContext.Provider>
     </div>
   );
 }

@@ -10,13 +10,7 @@ function Card({
 
   const currentUser = React.useContext(UserContext);
 
-  let user;
-
-  if (currentUser) {
-    user = currentUser;
-  }
-
-  const isOwn = card.owner._id === user._id;
+  const isOwn = card.owner._id === currentUser._id;
   const cardDeleteButtonClassName = (
     `element__remove-btn ${isOwn ? 'element_remove-btn_visible' : 'element_remove-btn_hidden'}`
   );

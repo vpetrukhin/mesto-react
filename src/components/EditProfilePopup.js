@@ -32,7 +32,7 @@ function EditProfilePopup({
   }
 
   useEffect(() => {
-    if (currentUser.about && currentUser.name) {
+    if (currentUser instanceof Object) {
       setName(currentUser.name);
       setDescription(currentUser.about);
     }
