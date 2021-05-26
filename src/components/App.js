@@ -18,7 +18,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [currentUser, setCurrentUser] = useState('');
+  const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
   // Функции
@@ -40,7 +40,7 @@ function App() {
         setCards(cardsData);
       })
       .catch((err) => console.log(err))
-  })
+  }, [])
 
   const handleUpdateUser = ({ name, about }) => {
     api.changeUserInfo({ name, about })

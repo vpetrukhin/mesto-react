@@ -32,10 +32,8 @@ function EditProfilePopup({
   }
 
   useEffect(() => {
-    if (currentUser instanceof Object) {
-      setName(currentUser.name);
-      setDescription(currentUser.about);
-    }
+      setName(currentUser?.name || '');
+      setDescription(currentUser?.about || '');
   }, [currentUser])
 
 
